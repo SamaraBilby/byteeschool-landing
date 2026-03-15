@@ -12,7 +12,7 @@ import AppFooter from "./components/footer/AppFooter.vue";
 
 const siteUrl = "https://www.byteeschool.online";
 const brandName = "ByteESchool";
-const logoUrl = `${siteUrl}/logo.png`;
+const logoUrl = `${siteUrl}/og-image.png`;
 const ogImageUrl = `${siteUrl}/og-image.png`;
 
 useSeoMeta({
@@ -30,71 +30,67 @@ useSeoMeta({
   robots: "index,follow",
 });
 
-const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": `${siteUrl}/#organization`,
-    name: brandName,
-    url: siteUrl,
-    logo: logoUrl, // opcional
-    sameAs: [
-      // TODO: links quando tiver (LinkedIn/Instagram etc.)
-      // "https://www.linkedin.com/company/byteeschool",
-      // "https://www.instagram.com/byteeschool"
-    ],
-    contactPoint: [
-      {
-        "@type": "ContactPoint",
-        contactType: "customer support",
-        email: "contato@byteeschool.com",
-        availableLanguage: ["pt-BR"],
-      },
-    ],
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "@id": `${siteUrl}/#software`,
-    name: `${brandName} — Hub educacional`,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    url: siteUrl,
-    description:
-      "Hub educacional para escolas: avaliações, banco de questões, tickets, notificações e pagamentos em um só lugar.",
-    image: ogImageUrl,
-    publisher: { "@id": `${siteUrl}/#organization` },
-    offers: [
-      {
-        "@type": "Offer",
-        category: "subscription",
-        priceCurrency: "BRL",
-        price: "197",
-        name: "Starter",
-        url: `${siteUrl}/#planos`,
-        availability: "https://schema.org/PreOrder",
-      },
-      {
-        "@type": "Offer",
-        category: "subscription",
-        priceCurrency: "BRL",
-        price: "599",
-        name: "Profissional",
-        url: `${siteUrl}/#planos`,
-        availability: "https://schema.org/PreOrder",
-      },
-      {
-        "@type": "Offer",
-        category: "subscription",
-        priceCurrency: "BRL",
-        price: "0",
-        name: "Enterprise (Sob consulta)",
-        url: `${siteUrl}/#planos`,
-        availability: "https://schema.org/PreOrder",
-      },
-    ],
-  },
-];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: brandName,
+      url: siteUrl,
+      logo: logoUrl,
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: "contato@byteeschool.com",
+          availableLanguage: ["pt-BR"],
+        },
+      ],
+      // TODO: Quando tiver redes, descomente e preencha:
+      // sameAs: [
+      //   "https://www.linkedin.com/company/byteeschool",
+      //   "https://www.instagram.com/byteeschool"
+      // ],
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${siteUrl}/#software`,
+      name: `${brandName} — Hub educacional`,
+      applicationCategory: "EducationalApplication",
+      operatingSystem: "Web",
+      url: siteUrl,
+      description:
+        "Hub educacional para escolas: avaliações, banco de questões, tickets, notificações e pagamentos em um só lugar.",
+      image: ogImageUrl,
+      publisher: { "@id": `${siteUrl}/#organization` },
+      offers: [
+        {
+          "@type": "Offer",
+          priceCurrency: "BRL",
+          price: "197",
+          name: "Starter",
+          url: `${siteUrl}/#planos`,
+          availability: "https://schema.org/PreOrder",
+        },
+        {
+          "@type": "Offer",
+          priceCurrency: "BRL",
+          price: "599",
+          name: "Profissional",
+          url: `${siteUrl}/#planos`,
+          availability: "https://schema.org/PreOrder",
+        },
+        {
+          "@type": "Offer",
+          name: "Enterprise (Sob consulta)",
+          url: `${siteUrl}/#planos`,
+          availability: "https://schema.org/PreOrder",
+        },
+      ],
+    },
+  ],
+};
 
 useHead({
   script: [
