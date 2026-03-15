@@ -29,7 +29,7 @@ onMounted(() => window.addEventListener("scroll", handleScroll));
     >
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center gap-2 flex-shrink-0">
-        <div class="w-[25%] flex items-center justify-center">
+        <div class="w-32 md:w-[25%] flex items-center justify-center">
           <img
             src="/image/logo.png"
             alt="Logo ByteESchool"
