@@ -1,2 +1,3 @@
 User-Agent: *
 Disallow:
+Sitemap: https://www.byteeschool.online/sitemap.xml
