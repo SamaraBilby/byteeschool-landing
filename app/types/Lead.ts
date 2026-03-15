@@ -3,6 +3,7 @@ export interface LeadWaitlist {
   email: string;
   telefone: string;
   nome: string;
+  hp?: string;
 }
 
 export interface LeadContato {
@@ -13,4 +14,5 @@ export interface LeadContato {
   escola?: string;
   tipo_escola?: string;
   mensagem?: string;
+  hp?: string;
 }

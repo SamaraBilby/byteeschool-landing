@@ -5,6 +5,7 @@ import { submitLead } from "~/services/leadService";
 const email = ref("");
 const telefone = ref("");
 const nome = ref("");
+const hp = ref("");
 const loading = ref(false);
 const success = ref(false);
 
@@ -18,11 +19,13 @@ async function handleSubmit() {
       email: email.value,
       telefone: telefone.value,
       nome: nome.value,
+      hp: hp.value,
     });
     success.value = true;
     email.value = "";
     telefone.value = "";
     nome.value = "";
+    hp.value = "";
   } catch (err) {
     console.error("Erro ao enviar lead:", err);
   } finally {
@@ -55,9 +58,17 @@ async function handleSubmit() {
 
       <!-- Form -->
       <form
-        class="flex flex-col gap-3 max-w-lg mx-auto"
+        class="relative flex flex-col gap-3 max-w-lg mx-auto"
         @submit.prevent="handleSubmit"
       >
+        <input
+          v-model="hp"
+          type="text"
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+          class="absolute left-[-9999px] top-auto w-px h-px overflow-hidden"
+        />
         <input
           v-model="nome"
           type="text"
@@ -79,7 +90,6 @@ async function handleSubmit() {
           placeholder="(11) 99999-9999"
           class="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/50 outline-none focus:border-white/60 transition-all text-sm font-medium"
         />
-
         <button
           type="submit"
           :disabled="loading"

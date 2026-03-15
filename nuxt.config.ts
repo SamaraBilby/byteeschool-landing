@@ -10,6 +10,9 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     resendApiKey: "",
+    supabaseServiceRoleKey: "",
+    upstashRedisRestUrl: "",
+    upstashRedisRestToken: "",
     public: {
       supabaseUrl: "",
       supabaseKey: "",

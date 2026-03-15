@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
+import { submitLead } from "~/services/leadService";
 
 const loading = ref(false);
 const success = ref(false);
@@ -11,6 +12,7 @@ const form = reactive({
   escola: "",
   tipo_escola: "",
   mensagem: "",
+  hp: "",
 });
 
 const benefits = [
@@ -25,19 +27,26 @@ async function handleSubmit() {
   loading.value = true;
 
   try {
-    await $fetch("/api/lead", {
-      method: "POST",
-      body: {
-        tipo: "contato",
-        nome: form.nome,
-        email: form.email,
-        telefone: form.telefone,
-        escola: form.escola,
-        tipo_escola: form.tipo_escola,
-        mensagem: form.mensagem,
-      },
+    await submitLead({
+      tipo: "contato",
+      nome: form.nome,
+      email: form.email,
+      telefone: form.telefone || undefined,
+      escola: form.escola || undefined,
+      tipo_escola: form.tipo_escola || undefined,
+      mensagem: form.mensagem || undefined,
+      hp: form.hp,
     });
+
     success.value = true;
+
+    form.nome = "";
+    form.email = "";
+    form.telefone = "";
+    form.escola = "";
+    form.tipo_escola = "";
+    form.mensagem = "";
+    form.hp = "";
   } catch (err) {
     console.error("Erro ao enviar formulário:", err);
   } finally {
@@ -111,9 +120,17 @@ async function handleSubmit() {
 
           <form
             v-if="!success"
-            class="space-y-5"
+            class="relative space-y-5"
             @submit.prevent="handleSubmit"
           >
+            <input
+              v-model="form.hp"
+              type="text"
+              name="website"
+              tabindex="-1"
+              autocomplete="off"
+              class="absolute left-[-9999px] top-auto w-px h-px overflow-hidden"
+            />
             <!-- Nome -->
             <div>
               <label
