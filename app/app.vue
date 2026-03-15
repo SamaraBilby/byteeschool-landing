@@ -10,22 +10,99 @@ import WaitlistSection from "./components/sections/WaitlistSection.vue";
 import DorEspecificaSection from "./components/sections/DorEspecificaSection.vue";
 import AppFooter from "./components/footer/AppFooter.vue";
 
+const siteUrl = "https://www.byteeschool.online";
+const brandName = "ByteESchool";
+const logoUrl = `${siteUrl}/logo.png`;
+const ogImageUrl = `${siteUrl}/og-image.png`;
+
 useSeoMeta({
   title: "ByteESchool — Hub educacional",
   description:
     "Chega de ferramentas espalhadas. O ByteESchool centraliza pedagógico, comunicação, suporte e pagamentos em um único ecossistema educacional.",
-
   ogTitle: "ByteESchool — Hub educacional para escolas",
   ogDescription:
     "Centralize a operação da sua escola. Avaliações, turmas, tickets, notificações e pagamentos em um só lugar.",
-  ogImage: "https://www.byteeschool.online/og-image.png",
-  ogUrl: "https://www.byteeschool.online",
+  ogImage: ogImageUrl,
+  ogUrl: `${siteUrl}/`,
+  ogType: "website",
   twitterCard: "summary_large_image",
-  twitterImage: "https://www.byteeschool.online/og-image.png",
+  twitterImage: ogImageUrl,
+  robots: "index,follow",
 });
 
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${siteUrl}/#organization`,
+    name: brandName,
+    url: siteUrl,
+    logo: logoUrl, // opcional
+    sameAs: [
+      // TODO: links quando tiver (LinkedIn/Instagram etc.)
+      // "https://www.linkedin.com/company/byteeschool",
+      // "https://www.instagram.com/byteeschool"
+    ],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: "contato@byteeschool.com",
+        availableLanguage: ["pt-BR"],
+      },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": `${siteUrl}/#software`,
+    name: `${brandName} — Hub educacional`,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: siteUrl,
+    description:
+      "Hub educacional para escolas: avaliações, banco de questões, tickets, notificações e pagamentos em um só lugar.",
+    image: ogImageUrl,
+    publisher: { "@id": `${siteUrl}/#organization` },
+    offers: [
+      {
+        "@type": "Offer",
+        category: "subscription",
+        priceCurrency: "BRL",
+        price: "197",
+        name: "Starter",
+        url: `${siteUrl}/#planos`,
+        availability: "https://schema.org/PreOrder",
+      },
+      {
+        "@type": "Offer",
+        category: "subscription",
+        priceCurrency: "BRL",
+        price: "599",
+        name: "Profissional",
+        url: `${siteUrl}/#planos`,
+        availability: "https://schema.org/PreOrder",
+      },
+      {
+        "@type": "Offer",
+        category: "subscription",
+        priceCurrency: "BRL",
+        price: "0",
+        name: "Enterprise (Sob consulta)",
+        url: `${siteUrl}/#planos`,
+        availability: "https://schema.org/PreOrder",
+      },
+    ],
+  },
+];
+
 useHead({
-  link: [{ rel: "canonical", href: "https://www.byteeschool.online/" }],
+  script: [
+    {
+      type: "application/ld+json",
+      innerHTML: JSON.stringify(jsonLd),
+    },
+  ],
 });
 </script>
 
