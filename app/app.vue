@@ -14,12 +14,18 @@ useSeoMeta({
   title: "ByteESchool — Hub educacional",
   description:
     "Chega de ferramentas espalhadas. O ByteESchool centraliza pedagógico, comunicação, suporte e pagamentos em um único ecossistema educacional.",
+
   ogTitle: "ByteESchool — Hub educacional para escolas",
   ogDescription:
     "Centralize a operação da sua escola. Avaliações, turmas, tickets, notificações e pagamentos em um só lugar.",
-  ogImage: "https://byteeschool.com.br/og-image.png",
-  ogUrl: "https://byteeschool.com.br",
+  ogImage: "https://www.byteeschool.online/og-image.png",
+  ogUrl: "https://www.byteeschool.online",
   twitterCard: "summary_large_image",
+  twitterImage: "https://www.byteeschool.online/og-image.png",
+});
+
+useHead({
+  link: [{ rel: "canonical", href: "https://www.byteeschool.online/" }],
 });
 </script>
 
