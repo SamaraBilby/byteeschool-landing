@@ -25,19 +25,33 @@ function onlyDigits(value: string) {
   return value.replace(/\D/g, "");
 }
 
-function maskPhone(value: string) {
-  const digits = onlyDigits(value).slice(0, locale.value === "pt" ? 11 : 10);
+function sanitizeInternationalPhone(value: string) {
+  return value
+    .replace(/[^\d+]/g, "")
+    .replace(/(?!^)\+/g, "")
+    .slice(0, 16);
+}
 
-  if (locale.value === "pt") {
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+function maskPhone(value: string) {
+  if (locale.value !== "pt") {
+    return sanitizeInternationalPhone(value);
   }
 
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `+1 (${digits.slice(0, 3)}) ${digits.slice(3)}`;
-  return `+1 (${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  const digits = onlyDigits(value).slice(0, 11);
+
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
+function normalizePhoneForSubmit(value: string) {
+  if (locale.value === "pt") {
+    return onlyDigits(value);
+  }
+
+  return sanitizeInternationalPhone(value);
 }
 
 function handlePhoneInput(event: Event) {
@@ -46,9 +60,16 @@ function handlePhoneInput(event: Event) {
 }
 
 function isValidPhone(value: string) {
-  const digits = onlyDigits(value);
+  const normalizedPhone = normalizePhoneForSubmit(value);
+  const digits = onlyDigits(normalizedPhone);
+
   if (!digits) return true;
-  return locale.value === "pt" ? digits.length === 10 || digits.length === 11 : digits.length === 10 || digits.length === 11;
+
+  if (locale.value === "pt") {
+    return digits.length === 10 || digits.length === 11;
+  }
+
+  return digits.length >= 8 && digits.length <= 15;
 }
 
 function resetForm() {
@@ -81,7 +102,7 @@ async function handleSubmit() {
       tipo: "contato",
       nome: form.nome.trim(),
       email: form.email.trim(),
-      telefone: form.telefone ? onlyDigits(form.telefone) : undefined,
+      telefone: form.telefone ? normalizePhoneForSubmit(form.telefone) : undefined,
       escola: form.escola.trim() || undefined,
       tipo_escola: form.tipo_escola || undefined,
       mensagem: form.mensagem.trim() || undefined,
@@ -153,7 +174,7 @@ async function handleSubmit() {
 
             <div>
               <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">{{ t.contact.phoneLabel }}</label>
-              <input v-model="form.telefone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="18" :placeholder="t.contact.phonePlaceholder" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-pm focus:ring-2 focus:ring-pm/10 transition-all" @input="handlePhoneInput" />
+              <input v-model="form.telefone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" :placeholder="t.contact.phonePlaceholder" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-pm focus:ring-2 focus:ring-pm/10 transition-all" @input="handlePhoneInput" />
             </div>
 
             <div>
