@@ -3,43 +3,44 @@ import BaseSectionHeader from "../header/BaseSectionHeader.vue";
 
 const problems = [
   {
+    icon: "event_busy",
+    title: "Planejamento pedagógico espalhado",
+    description:
+      "Planos de aula, conteúdos, revisões e provas acabam divididos entre planilhas, cadernos, mensagens e arquivos soltos. A coordenação perde a visão do caminho da turma.",
+  },
+  {
     icon: "assignment_late",
-    title: "Avaliações em ferramentas genéricas",
+    title: "Exercícios e provas desconectados",
     description:
-      "Uso excessivo de Google Forms que não geram histórico acadêmico automático e dificultam a análise de desempenho por aluno.",
+      "Atividades, exercícios, provas e revisões muitas vezes são criados fora do planejamento da turma, dificultando saber o que foi praticado, avaliado e retomado em cada etapa.",
   },
   {
-    icon: "chat_error",
-    title: "Operação espalhada",
+    icon: "style",
+    title: "Flashcards fora da rotina de estudo",
     description:
-      "Dados de alunos em planilhas, avisos no WhatsApp e notas em cadernos. O risco de perda de dados é constante e o retrabalho é diário.",
+      "Flashcards podem ajudar muito na fixação, especialmente em idiomas e conteúdos de memorização, mas geralmente ficam em ferramentas separadas e sem ligação com a aula do dia.",
   },
   {
-    icon: "payments",
-    title: "Financeiro Manual",
+    icon: "edit_note",
+    title: "Atividades manuais sem organização",
     description:
-      "Emissão de boletos um a um, controle de inadimplência em cadernos e falta de régua de cobrança automática para os pais.",
+      "Trabalhos, tarefas em folha, redações, projetos, atividades em sala e entregas manuais nem sempre ficam conectados à turma, ao professor, ao conteúdo e ao cronograma.",
   },
   {
-    icon: "group_off",
-    title: "Abandono de Alunos",
+    icon: "menu_book",
+    title: "Material didático sem vínculo com a aula",
     description:
-      "Dificuldade em identificar alunos com baixa frequência ou queda de notas a tempo de evitar o cancelamento da matrícula.",
+      "Livros, apostilas, unidades, capítulos e conteúdos próprios muitas vezes não ficam ligados ao plano da turma, dificultando saber exatamente o que será ensinado e praticado.",
   },
   {
-    icon: "speed",
-    title: "Lentidão na Secretaria",
+    icon: "auto_awesome",
+    title: "Professor cria tudo do zero",
     description:
-      "Matrículas que dependem de papéis físicos e presença dos pais, tornando o processo lento e propenso a erros de digitação.",
-  },
-  {
-    icon: "insights",
-    title: "Falta de Indicadores",
-    description:
-      "Impossibilidade de ver o faturamento real, ticket médio e taxa de retenção em um painel único e atualizado em tempo real.",
+      "Montar plano de aula, exercício, revisão, atividade e tarefa consome tempo. Sem apoio inteligente, o professor repete trabalho manual que poderia ser agilizado com sugestões assistidas.",
   },
 ];
 </script>
+
 <template>
   <section
     class="py-24 px-6 bg-white"
@@ -48,8 +49,8 @@ const problems = [
   >
     <div class="container mx-auto">
       <BaseSectionHeader
-        title="O problema real das escolas hoje"
-        subtitle="Sua equipe perde tempo alternando entre janelas, planilhas e sistemas que não se conversam."
+        title="A rotina pedagógica ainda fica espalhada demais"
+        subtitle="Turmas, planos de aula, materiais, exercícios, provas, flashcards e atividades precisam conversar entre si para a escola acompanhar melhor o aprendizado."
         :center="true"
       />
 
@@ -62,11 +63,15 @@ const problems = [
           <div
             class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600 group-hover:text-white transition-colors"
           >
-            <span class="material-symbols-outlined">{{ problem.icon }}</span>
+            <span class="material-symbols-outlined">
+              {{ problem.icon }}
+            </span>
           </div>
+
           <h3 class="text-xl font-bold text-slate-800 mb-3">
             {{ problem.title }}
           </h3>
+
           <p class="text-slate-600 leading-relaxed text-sm">
             {{ problem.description }}
           </p>

@@ -6,7 +6,6 @@ const navLinks = [
   { href: "#problemas", label: "Problema" },
   { href: "#solucao", label: "Solução" },
   { href: "#transparencia", label: "Recursos" },
-  { href: "#planos", label: "Planos" },
 ];
 
 function handleScroll() {
@@ -25,16 +24,16 @@ onMounted(() => window.addEventListener("scroll", handleScroll));
     "
   >
     <nav
-      class="w-[100%]container mx-auto px-6 h-25 flex items-center justify-between"
+      class="w-[100%] mx-auto px-2 h-25 flex items-center justify-between"
     >
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center gap-2 flex-shrink-0">
-        <div class="w-24 md:w-[25%] flex items-center justify-center">
+        <div class="w-10 md:w-[10%] flex items-center justify-center">
           <img
-            src="/image/logo.png"
-            alt="Logo ByteESchool"
+            src="/image/b8edu-logos-sem-fundo.png"
+            alt="Logo b8edu"
             class="w-100"
-            title="ByteESchool"
+            title="b8edu"
           />
         </div>
         <!-- <div class="leading-tight">

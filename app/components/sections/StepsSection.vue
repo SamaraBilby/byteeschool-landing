@@ -4,47 +4,56 @@ import BaseBadge from "../badge/BaseBadge.vue";
 
 const steps = [
   {
-    title: "Escola cria sua identidade",
+    title: "A escola configura sua estrutura",
     description:
-      "Em minutos, a escola configura logo, cores e domínio personalizado. Cada tenant é completamente isolado — dados, usuários e configurações são exclusivos.",
-    tag: "Automático",
+      "A b8edu se adapta ao formato da escola: escola regular, escola de idiomas, curso livre, reforço escolar ou curso técnico. A escola define sua identidade, níveis, disciplinas, perfis e permissões.",
+    tag: "Multi-tenant",
     tagVariant: "available" as const,
     active: true,
   },
   {
-    title: "Professores, turmas e permissões configuradas",
+    title: "Turmas, professores e alunos são organizados",
     description:
-      "Administrador cadastra professores, define turmas e atribui permissões granulares por perfil. Cada usuário acessa apenas o que é seu.",
-    tag: "Simples",
+      "A coordenação cadastra turmas por nível, período, modalidade e horário. Professores e alunos são vinculados às turmas, mantendo cada informação no contexto certo.",
+    tag: "Base pedagógica",
     tagVariant: "purple" as const,
     active: false,
   },
   {
-    title: "Banco de questões e provas montadas — sem burocracia",
+    title: "Materiais e conteúdos entram no plano",
     description:
-      "Professor cria ou importa questões, monta templates de prova com o Exam Builder e publica para uma ou várias turmas simultaneamente.",
-    tag: "Simples",
+      "Livros, apostilas, unidades, capítulos, cursos e conteúdos próprios podem ser conectados ao plano da turma. Assim, o material didático deixa de ficar solto e passa a fazer parte do cronograma.",
+    tag: "Materiais",
     tagVariant: "orange" as const,
     active: false,
   },
   {
-    title: "Prova aplicada — Aluno recebe notificação instantânea",
+    title: "A turma ganha um plano e um cronograma",
     description:
-      "Quando a prova é liberada, alunos recebem push notification imediatamente. Podem responder pelo PWA, inclusive sem internet.",
-    tag: "PWA Offline",
+      "A coordenação ou o professor monta o caminho pedagógico da turma: aulas, conteúdos, revisões, provas, atividades, flashcards, tarefas e entregas manuais organizados por data.",
+    tag: "Cronograma",
     tagVariant: "available" as const,
     active: false,
   },
   {
-    title: "Suporte centralizado — Escola atua dentro da plataforma",
+    title: "Professor e aluno acompanham a rotina",
     description:
-      "Dúvidas, solicitações e problemas viram tickets rastreáveis. A equipe atua com prioridade, histórico e notificações a cada atualização — sem WhatsApp, sem email perdido.",
-    tag: "Central de Tickets",
+      "O professor visualiza o que será trabalhado em cada aula e o aluno acompanha conteúdos, atividades, provas, revisões e tarefas publicadas para sua turma.",
+    tag: "Visão por perfil",
     tagVariant: "purple" as const,
+    active: false,
+  },
+  {
+    title: "A plataforma evolui com registros e IA",
+    description:
+      "Nas próximas etapas, a b8edu evolui para diário de aula, frequência, boletim, relatórios e auxílio de IA para sugerir planos, exercícios, revisões, flashcards e tarefas, sempre com revisão do professor.",
+    tag: "Em evolução",
+    tagVariant: "orange" as const,
     active: false,
   },
 ];
 </script>
+
 <template>
   <section
     class="py-24 px-6 bg-slate-50"
@@ -54,8 +63,8 @@ const steps = [
     <div class="container mx-auto max-w-5xl">
       <BaseSectionHeader
         eyebrow="COMO FUNCIONA"
-        title="Da bagunça à operação centralizada"
-        subtitle="Cinco passos para transformar a gestão da sua escola de idiomas."
+        title="Da rotina espalhada ao planejamento conectado"
+        subtitle="A b8edu organiza o caminho pedagógico da escola em etapas: estrutura, turmas, materiais, planos, cronogramas, atividades e acompanhamento."
         :center="true"
       />
 
@@ -74,6 +83,7 @@ const steps = [
             >
               {{ index + 1 }}
             </div>
+
             <!-- Connector line -->
             <div
               v-if="index < steps.length - 1"
@@ -85,7 +95,10 @@ const steps = [
           <!-- Content -->
           <div class="pb-2 flex-1 pt-2">
             <div class="flex items-center gap-3 mb-2 flex-wrap">
-              <h3 class="text-lg font-extrabold text-pd">{{ step.title }}</h3>
+              <h3 class="text-lg font-extrabold text-pd">
+                {{ step.title }}
+              </h3>
+
               <BaseBadge
                 v-if="step.tag"
                 :variant="step.tagVariant || 'available'"
@@ -94,6 +107,7 @@ const steps = [
                 {{ step.tag }}
               </BaseBadge>
             </div>
+
             <p class="text-slate-600 text-sm leading-relaxed max-w-2xl">
               {{ step.description }}
             </p>

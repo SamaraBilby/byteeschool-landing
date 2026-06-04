@@ -121,7 +121,7 @@ export default defineEventHandler(async (event) => {
   const resend = new Resend(config.resendApiKey);
 
   const { data, error: resendError } = await resend.emails.send({
-    from: "ByteESchool <contato@byteeschool.com>",
+    from: "b8edu <contato@b8edu.online>",
     to: ["samarabilby@hotmail.com"],
     subject: `🎉 Novo lead (${body.tipo}): ${emailNorm}`,
     html: `
@@ -132,9 +132,6 @@ export default defineEventHandler(async (event) => {
       <p><b>Telefone:</b> ${body.telefone ?? "-"}</p>
     `,
   });
-
-  console.log("[resend] data:", data);
-  console.log("[resend] error:", resendError);
 
   return { success: true };
 });

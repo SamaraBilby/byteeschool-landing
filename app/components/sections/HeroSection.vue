@@ -1,28 +1,46 @@
 <script setup lang="ts">
 const schoolTypes = [
-  "Escolas",
+  "Escolas Regulares",
   "Escolas de Idiomas",
-  "Franquias Educacionais",
   "Cursos Livres",
+  "Reforço Escolar",
+  "Cursos Técnicos",
 ];
 
-const questionOptions = [
-  { label: "She has been living there since 2018", selected: false },
-  { label: "She lived there for five years", selected: true },
-  { label: "She will move next year", selected: false },
-  { label: "She had never visited before", selected: false },
+const lessonPlanItems = [
+  {
+    label: "Material didático: Unidade 3 — Frações e porcentagem",
+    selected: false,
+    badge: "Material",
+  },
+  {
+    label: "Aula de hoje: revisão guiada + atividade prática",
+    selected: true,
+    badge: "Hoje",
+  },
+  {
+    label: "Próxima aula: prova diagnóstica da turma",
+    selected: false,
+    badge: "Prova",
+  },
+  {
+    label: "Tarefa: lista de exercícios para casa",
+    selected: false,
+    badge: "Tarefa",
+  },
 ];
 
 const heroStats = [
-  { value: "4+", label: "Tipos de questão" },
-  { value: "100%", label: "PWA & Offline" },
-  { value: "∞", label: "Multi-tenant" },
+  { value: "01", label: "Turmas organizadas" },
+  { value: "02", label: "Planos por turma" },
+  { value: "03", label: "Cronograma claro" },
 ];
 </script>
+
 <template>
   <!-- pt-20 = compensa o header fixo de h-20 -->
   <section
-    class="gradient-hero pt-32 pb-20 px-6 relative overflow-hidden"
+    class="gradient-hero md:pt-40 pb-20 px-6 relative overflow-hidden"
     data-purpose="hero"
     id="hero"
   >
@@ -45,16 +63,16 @@ const heroStats = [
             class="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-xs font-bold px-4 py-2 rounded-full mb-8 uppercase tracking-widest"
           >
             <span class="w-2 h-2 bg-om rounded-full animate-pulse" />
-            Hub educacional — Em breve no Brasil
+            Plataforma educacional
           </div>
 
           <!-- Headline -->
           <h1
             class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6"
           >
-            Chega de ferramentas
+            Organize a rotina
             <span class="text-om relative">
-              espalhadas
+              pedagógica
               <svg
                 class="absolute -bottom-1 left-0 w-full"
                 viewBox="0 0 300 8"
@@ -70,13 +88,14 @@ const heroStats = [
                 />
               </svg>
             </span>
-            na sua escola
+            da sua escola
           </h1>
 
           <!-- Subheadline -->
-          <p class="text-white/80 text-lg leading-relaxed mb-10 max-w-lg">
-            Avaliações, turmas, comunicação, suporte e pagamentos em um único
-            ecossistema educacional.
+          <p class="text-white/80 text-lg leading-relaxed mb-10 max-w-xl">
+            A b8edu ajuda escolas a centralizar turmas, professores, alunos,
+            materiais didáticos, planos de aula e cronogramas pedagógicos em
+            uma plataforma simples e visual.
           </p>
 
           <!-- CTA Group -->
@@ -86,16 +105,17 @@ const heroStats = [
               class="inline-flex items-center justify-center gap-2 bg-om text-white font-bold px-8 py-4 rounded-xl hover:bg-orange-600 transition-all active:scale-95 shadow-lg text-base"
             >
               <span class="material-symbols-outlined">rocket_launch</span>
-              Garantir meu acesso antecipado
+              Entrar na lista de interesse
             </a>
+
             <a
               href="#solucao"
               class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/30 text-white font-semibold px-6 py-4 rounded-xl hover:bg-white/20 transition-all text-base"
             >
               Ver como funciona
-              <span class="material-symbols-outlined text-base"
-                >arrow_forward</span
-              >
+              <span class="material-symbols-outlined text-base">
+                arrow_forward
+              </span>
             </a>
           </div>
 
@@ -104,8 +124,9 @@ const heroStats = [
             <p
               class="text-white/50 text-xs font-bold uppercase tracking-widest mb-3"
             >
-              Feito para
+              Pensado para diferentes formatos de ensino
             </p>
+
             <div class="flex flex-wrap gap-2">
               <span
                 v-for="type in schoolTypes"
@@ -120,7 +141,7 @@ const heroStats = [
 
         <!-- RIGHT: Live UI Preview Cards -->
         <div class="hidden lg:block relative">
-          <!-- Main Card: Exam Builder -->
+          <!-- Main Card: Classroom Schedule -->
           <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm ml-auto">
             <!-- Card Header -->
             <div class="flex justify-between items-center mb-5">
@@ -128,16 +149,18 @@ const heroStats = [
                 <div
                   class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1"
                 >
-                  Exam Builder
+                  Cronograma da turma
                 </div>
+
                 <div class="text-sm font-extrabold text-pd">
-                  Prova de Listening — B2
+                  9º Ano A — Matemática
                 </div>
               </div>
+
               <span
                 class="bg-green-50 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full border border-green-100 uppercase tracking-wider"
               >
-                Publicada
+                Publicado
               </span>
             </div>
 
@@ -146,48 +169,62 @@ const heroStats = [
               <div
                 class="flex justify-between text-[10px] text-slate-400 mb-1.5"
               >
-                <span>Respondendo</span>
-                <span class="font-bold text-pd">47%</span>
+                <span>Planejamento do período</span>
+                <span class="font-bold text-pd">62%</span>
               </div>
+
               <div class="w-full bg-slate-100 rounded-full h-1.5">
-                <div class="bg-pm h-1.5 rounded-full" style="width: 47%" />
+                <div class="bg-pm h-1.5 rounded-full" style="width: 62%" />
               </div>
             </div>
 
-            <!-- Question preview -->
+            <!-- Lesson preview -->
             <div class="bg-slate-50 rounded-xl p-4 mb-4 text-xs">
               <div
                 class="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-2"
               >
-                Questão 3 de 10
+                Aula planejada
               </div>
+
               <div class="text-slate-700 font-medium">
-                Selecione a alternativa que melhor completa a frase:
+                Revise o que será trabalhado na próxima aula, os materiais
+                vinculados e as atividades previstas para a turma.
               </div>
             </div>
 
-            <!-- Options -->
+            <!-- Lesson plan items -->
             <div class="space-y-2 mb-4">
               <div
-                v-for="(opt, i) in questionOptions"
+                v-for="(item, i) in lessonPlanItems"
                 :key="i"
-                class="flex items-center gap-3 p-2.5 rounded-lg border text-xs font-medium cursor-pointer transition-all"
+                class="flex items-center gap-3 p-2.5 rounded-lg border text-xs font-medium transition-all"
                 :class="
-                  opt.selected
+                  item.selected
                     ? 'border-pm bg-pm/5 text-pd'
                     : 'border-slate-100 text-slate-600 hover:border-pm/30'
                 "
               >
                 <div
-                  class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-                  :class="opt.selected ? 'border-pm bg-pm' : 'border-slate-300'"
+                  class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  :class="item.selected ? 'bg-pm text-white' : 'bg-slate-100 text-slate-400'"
                 >
-                  <div
-                    v-if="opt.selected"
-                    class="w-2 h-2 bg-white rounded-full"
-                  />
+                  <span class="material-symbols-outlined text-sm">
+                    {{ item.selected ? "event_available" : "event_note" }}
+                  </span>
                 </div>
-                {{ opt.label }}
+
+                <div class="min-w-0 flex-1">
+                  <div class="truncate">
+                    {{ item.label }}
+                  </div>
+
+                  <span
+                    class="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider"
+                    :class="item.selected ? 'text-pm' : 'text-slate-400'"
+                  >
+                    {{ item.badge }}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -198,7 +235,10 @@ const heroStats = [
                 :key="stat.label"
                 class="text-center"
               >
-                <div class="text-pd font-bold text-base">{{ stat.value }}</div>
+                <div class="text-pd font-bold text-base">
+                  {{ stat.value }}
+                </div>
+
                 <div
                   class="text-[9px] text-slate-400 uppercase tracking-wide leading-tight"
                 >
@@ -208,67 +248,81 @@ const heroStats = [
             </div>
           </div>
 
-          <!-- Floating card: Notification -->
+          <!-- Floating card: Classroom plan -->
           <div
-            class="absolute -top-6 -left-6 bg-white rounded-2xl shadow-xl p-4 w-56 border border-slate-100"
+            class="absolute -top-6 -left-6 bg-white rounded-2xl shadow-xl p-4 w-60 border border-slate-100"
           >
             <div class="flex justify-between items-start mb-2">
               <span
                 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
-                >Push Notification</span
               >
+                Plano da turma
+              </span>
+
               <span
                 class="bg-pm/10 text-pm text-[10px] font-bold px-2 py-0.5 rounded-full"
-                >Enviado</span
               >
+                Em revisão
+              </span>
             </div>
+
             <div class="flex gap-3 items-start">
               <div
                 class="w-8 h-8 bg-pm/5 rounded-xl flex items-center justify-center text-pm flex-shrink-0"
               >
-                <span class="material-symbols-outlined text-sm"
-                  >notifications_active</span
-                >
+                <span class="material-symbols-outlined text-sm">
+                  checklist
+                </span>
               </div>
+
               <div>
                 <h4 class="text-xs font-extrabold text-pd">
-                  Nova prova liberada!
+                  Plano B1 — 2026/1
                 </h4>
+
                 <p class="text-[10px] text-slate-500 leading-snug">
-                  Sua prova de Listening está disponível.
+                  Livro, unidades, revisões e avaliações conectados ao
+                  cronograma.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- Floating card: Ticket -->
+          <!-- Floating card: Teaching material -->
           <div
             class="absolute -bottom-6 -left-8 bg-white rounded-2xl shadow-xl p-4 w-60 border border-slate-100"
           >
             <div class="flex justify-between items-start mb-2">
               <span
                 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
-                >Ticket de Suporte</span
               >
+                Material didático
+              </span>
+
               <span
                 class="bg-om/10 text-om text-[10px] font-bold px-2 py-0.5 rounded-full"
-                >Em andamento</span
               >
+                Vinculado
+              </span>
             </div>
+
             <div class="flex gap-3 items-start">
               <div
                 class="w-8 h-8 bg-om/5 rounded-xl flex items-center justify-center text-om flex-shrink-0"
               >
-                <span class="material-symbols-outlined text-sm"
-                  >chat_bubble</span
-                >
+                <span class="material-symbols-outlined text-sm">
+                  menu_book
+                </span>
               </div>
+
               <div>
                 <h4 class="text-xs font-extrabold text-pd">
-                  #0042 — Erro na importação
+                  Unidade 3 — Capítulo 2
                 </h4>
+
                 <p class="text-[10px] text-slate-500 leading-snug">
-                  English Way · Aberto há 2h
+                  Livro, apostila ou conteúdo próprio conectado ao plano da
+                  aula.
                 </p>
               </div>
             </div>
@@ -278,6 +332,7 @@ const heroStats = [
     </div>
   </section>
 </template>
+
 <style scoped>
 .gradient-hero {
   background: linear-gradient(135deg, #3d2066 0%, #5b2d8e 100%);

@@ -4,6 +4,7 @@ import { submitLead } from "~/services/leadService";
 
 const loading = ref(false);
 const success = ref(false);
+const errorMessage = ref("");
 
 const form = reactive({
   nome: "",
@@ -16,39 +17,92 @@ const form = reactive({
 });
 
 const benefits = [
-  "Acesso antecipado com preço de fundador",
-  "Onboarding dedicado e personalizado",
-  "Sua dor vira feature — influencie o roadmap",
-  "Suporte direto com a equipe fundadora",
+  "Acesso antecipado à primeira versão da b8edu",
+  "Participação na validação do produto",
+  "Sua dor pode influenciar o roadmap",
+  "Contato direto com a equipe fundadora",
 ];
 
+function onlyDigits(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+function maskPhone(value: string) {
+  const digits = onlyDigits(value).slice(0, 11);
+
+  if (digits.length <= 2) {
+    return digits;
+  }
+
+  if (digits.length <= 6) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+
+  if (digits.length <= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
+function handlePhoneInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  form.telefone = maskPhone(input.value);
+}
+
+function isValidPhone(value: string) {
+  const digits = onlyDigits(value);
+
+  if (!digits) {
+    return true;
+  }
+
+  return digits.length === 10 || digits.length === 11;
+}
+
+function resetForm() {
+  form.nome = "";
+  form.email = "";
+  form.telefone = "";
+  form.escola = "";
+  form.tipo_escola = "";
+  form.mensagem = "";
+  form.hp = "";
+}
+
 async function handleSubmit() {
-  if (!form.email || !form.nome) return;
+  errorMessage.value = "";
+
+  if (!form.email || !form.nome) {
+    errorMessage.value = "Preencha seu nome e e-mail para continuar.";
+    return;
+  }
+
+  if (!isValidPhone(form.telefone)) {
+    errorMessage.value = "Informe um WhatsApp válido com DDD.";
+    return;
+  }
+
   loading.value = true;
 
   try {
     await submitLead({
       tipo: "contato",
-      nome: form.nome,
-      email: form.email,
-      telefone: form.telefone || undefined,
-      escola: form.escola || undefined,
+      nome: form.nome.trim(),
+      email: form.email.trim(),
+      telefone: form.telefone ? onlyDigits(form.telefone) : undefined,
+      escola: form.escola.trim() || undefined,
       tipo_escola: form.tipo_escola || undefined,
-      mensagem: form.mensagem || undefined,
+      mensagem: form.mensagem.trim() || undefined,
       hp: form.hp,
     });
 
     success.value = true;
-
-    form.nome = "";
-    form.email = "";
-    form.telefone = "";
-    form.escola = "";
-    form.tipo_escola = "";
-    form.mensagem = "";
-    form.hp = "";
+    resetForm();
   } catch (err) {
     console.error("Erro ao enviar formulário:", err);
+    errorMessage.value =
+      "Não conseguimos enviar sua mensagem agora. Tente novamente em instantes.";
   } finally {
     loading.value = false;
   }
@@ -67,17 +121,21 @@ async function handleSubmit() {
         <div>
           <span
             class="text-om font-bold uppercase tracking-widest text-sm mb-3 block"
-            >FALE COM A GENTE</span
           >
+            FALE COM A GENTE
+          </span>
+
           <h2
             class="text-3xl md:text-4xl font-extrabold text-pd leading-tight mb-6"
           >
-            Conta pra gente sobre a sua escola
+            Conta pra gente sobre a rotina da sua escola
           </h2>
+
           <p class="text-slate-600 leading-relaxed mb-8">
-            Queremos entender os desafios reais da sua escola para garantir que
-            o ByteESchool resolve exatamente o que você precisa — antes do
-            lançamento.
+            Queremos entender os desafios reais de escolas, cursos e operações
+            educacionais para construir a b8edu com foco no que mais importa:
+            turmas, planejamento pedagógico, materiais, atividades, provas,
+            flashcards e cronogramas.
           </p>
 
           <!-- Bullets de benefícios -->
@@ -92,6 +150,7 @@ async function handleSubmit() {
               >
                 <span class="material-symbols-outlined text-sm">check</span>
               </span>
+
               {{ benefit }}
             </li>
           </ul>
@@ -105,13 +164,15 @@ async function handleSubmit() {
               <div
                 class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"
               >
-                <span class="material-symbols-outlined text-green-600 text-3xl"
-                  >check_circle</span
-                >
+                <span class="material-symbols-outlined text-green-600 text-3xl">
+                  check_circle
+                </span>
               </div>
+
               <h3 class="text-xl font-extrabold text-pd mb-2">
                 Mensagem enviada!
               </h3>
+
               <p class="text-slate-500 text-sm">
                 Nossa equipe entrará em contato em breve. Obrigado!
               </p>
@@ -123,6 +184,7 @@ async function handleSubmit() {
             class="relative space-y-5"
             @submit.prevent="handleSubmit"
           >
+            <!-- Honeypot anti-spam -->
             <input
               v-model="form.hp"
               type="text"
@@ -131,6 +193,7 @@ async function handleSubmit() {
               autocomplete="off"
               class="absolute left-[-9999px] top-auto w-px h-px overflow-hidden"
             />
+
             <!-- Nome -->
             <div>
               <label
@@ -138,10 +201,12 @@ async function handleSubmit() {
               >
                 Seu nome *
               </label>
+
               <input
                 v-model="form.nome"
                 type="text"
                 required
+                autocomplete="name"
                 placeholder="Ex: Maria Fernanda"
                 class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-pm focus:ring-2 focus:ring-pm/10 transition-all"
               />
@@ -154,10 +219,12 @@ async function handleSubmit() {
               >
                 E-mail *
               </label>
+
               <input
                 v-model="form.email"
                 type="email"
                 required
+                autocomplete="email"
                 placeholder="seu@email.com"
                 class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-pm focus:ring-2 focus:ring-pm/10 transition-all"
               />
@@ -170,11 +237,16 @@ async function handleSubmit() {
               >
                 WhatsApp
               </label>
+
               <input
                 v-model="form.telefone"
                 type="tel"
+                inputmode="numeric"
+                autocomplete="tel"
+                maxlength="15"
                 placeholder="(11) 99999-9999"
                 class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-pm focus:ring-2 focus:ring-pm/10 transition-all"
+                @input="handlePhoneInput"
               />
             </div>
 
@@ -183,12 +255,13 @@ async function handleSubmit() {
               <label
                 class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
               >
-                Nome da escola
+                Nome da escola ou curso
               </label>
+
               <input
                 v-model="form.escola"
                 type="text"
-                placeholder="Ex: English Way Florianópolis"
+                placeholder="Ex: Escola Aurora, English Way, Curso Saber+"
                 class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-pm focus:ring-2 focus:ring-pm/10 transition-all"
               />
             </div>
@@ -198,17 +271,20 @@ async function handleSubmit() {
               <label
                 class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
               >
-                Tipo de escola
+                Tipo de instituição
               </label>
+
               <select
                 v-model="form.tipo_escola"
                 class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 outline-none focus:border-pm focus:ring-2 focus:ring-pm/10 transition-all bg-white"
               >
                 <option value="" disabled>Selecione...</option>
-                <option value="escola-ingles">Escola de inglês</option>
-                <option value="escola-idiomas">Escola de outros idiomas</option>
-                <option value="franquia">Franquia educacional</option>
+                <option value="escola-regular">Escola regular</option>
+                <option value="escola-idiomas">Escola de idiomas</option>
                 <option value="curso-livre">Curso livre</option>
+                <option value="reforco-escolar">Reforço escolar</option>
+                <option value="curso-tecnico">Curso técnico</option>
+                <option value="franquia-educacional">Franquia educacional</option>
                 <option value="outro">Outro</option>
               </select>
             </div>
@@ -220,13 +296,21 @@ async function handleSubmit() {
               >
                 Qual é seu maior desafio hoje?
               </label>
+
               <textarea
                 v-model="form.mensagem"
                 rows="3"
-                placeholder="Ex: Não consigo controlar a frequência e notas ao mesmo tempo..."
+                placeholder="Ex: Hoje o planejamento das aulas fica em planilhas, as provas em formulários e as atividades espalhadas no WhatsApp..."
                 class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-pm focus:ring-2 focus:ring-pm/10 transition-all resize-none"
               />
             </div>
+
+            <p
+              v-if="errorMessage"
+              class="text-sm font-medium text-red-600"
+            >
+              {{ errorMessage }}
+            </p>
 
             <!-- Submit -->
             <button
@@ -237,11 +321,14 @@ async function handleSubmit() {
               <span
                 v-if="loading"
                 class="material-symbols-outlined text-base animate-spin"
-                >progress_activity</span
               >
-              <span v-else class="material-symbols-outlined text-base"
-                >send</span
-              >
+                progress_activity
+              </span>
+
+              <span v-else class="material-symbols-outlined text-base">
+                send
+              </span>
+
               {{ loading ? "Enviando..." : "Enviar mensagem" }}
             </button>
 
@@ -255,11 +342,13 @@ async function handleSubmit() {
     </div>
   </section>
 </template>
+
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.4s ease;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
