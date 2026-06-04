@@ -1,40 +1,9 @@
 <script setup lang="ts">
-const schoolTypes = [
-  "Escolas Regulares",
-  "Escolas de Idiomas",
-  "Cursos Livres",
-  "Reforço Escolar",
-  "Cursos Técnicos",
-];
+const { t } = useLandingI18n();
 
-const lessonPlanItems = [
-  {
-    label: "Material didático: Unidade 3 — Frações e porcentagem",
-    selected: false,
-    badge: "Material",
-  },
-  {
-    label: "Aula de hoje: revisão guiada + atividade prática",
-    selected: true,
-    badge: "Hoje",
-  },
-  {
-    label: "Próxima aula: prova diagnóstica da turma",
-    selected: false,
-    badge: "Prova",
-  },
-  {
-    label: "Tarefa: lista de exercícios para casa",
-    selected: false,
-    badge: "Tarefa",
-  },
-];
-
-const heroStats = [
-  { value: "01", label: "Turmas organizadas" },
-  { value: "02", label: "Planos por turma" },
-  { value: "03", label: "Cronograma claro" },
-];
+const schoolTypes = computed(() => t.value.hero.schoolTypes);
+const lessonPlanItems = computed(() => t.value.hero.lessonPlanItems);
+const heroStats = computed(() => t.value.hero.stats);
 </script>
 
 <template>
@@ -63,16 +32,16 @@ const heroStats = [
             class="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-xs font-bold px-4 py-2 rounded-full mb-8 uppercase tracking-widest"
           >
             <span class="w-2 h-2 bg-om rounded-full animate-pulse" />
-            Plataforma educacional
+            {{ t.hero.eyebrow }}
           </div>
 
           <!-- Headline -->
           <h1
             class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6"
           >
-            Organize a rotina
+            {{ t.hero.titleBefore }}
             <span class="text-om relative">
-              pedagógica
+              {{ t.hero.titleHighlight }}
               <svg
                 class="absolute -bottom-1 left-0 w-full"
                 viewBox="0 0 300 8"
@@ -88,14 +57,12 @@ const heroStats = [
                 />
               </svg>
             </span>
-            da sua escola
+            {{ t.hero.titleAfter }}
           </h1>
 
           <!-- Subheadline -->
           <p class="text-white/80 text-lg leading-relaxed mb-10 max-w-xl">
-            A b8edu ajuda escolas a centralizar turmas, professores, alunos,
-            materiais didáticos, planos de aula e cronogramas pedagógicos em
-            uma plataforma simples e visual.
+            {{ t.hero.subtitle }}
           </p>
 
           <!-- CTA Group -->
@@ -105,14 +72,14 @@ const heroStats = [
               class="inline-flex items-center justify-center gap-2 bg-om text-white font-bold px-8 py-4 rounded-xl hover:bg-orange-600 transition-all active:scale-95 shadow-lg text-base"
             >
               <span class="material-symbols-outlined">rocket_launch</span>
-              Entrar na lista de interesse
+              {{ t.hero.primaryCta }}
             </a>
 
             <a
               href="#solucao"
               class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/30 text-white font-semibold px-6 py-4 rounded-xl hover:bg-white/20 transition-all text-base"
             >
-              Ver como funciona
+              {{ t.hero.secondaryCta }}
               <span class="material-symbols-outlined text-base">
                 arrow_forward
               </span>
@@ -124,7 +91,7 @@ const heroStats = [
             <p
               class="text-white/50 text-xs font-bold uppercase tracking-widest mb-3"
             >
-              Pensado para diferentes formatos de ensino
+              {{ t.hero.schoolTypesLabel }}
             </p>
 
             <div class="flex flex-wrap gap-2">
@@ -149,18 +116,18 @@ const heroStats = [
                 <div
                   class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1"
                 >
-                  Cronograma da turma
+                  {{ t.hero.card.eyebrow }}
                 </div>
 
                 <div class="text-sm font-extrabold text-pd">
-                  9º Ano A — Matemática
+                  {{ t.hero.card.title }}
                 </div>
               </div>
 
               <span
                 class="bg-green-50 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full border border-green-100 uppercase tracking-wider"
               >
-                Publicado
+                {{ t.hero.card.status }}
               </span>
             </div>
 
@@ -169,7 +136,7 @@ const heroStats = [
               <div
                 class="flex justify-between text-[10px] text-slate-400 mb-1.5"
               >
-                <span>Planejamento do período</span>
+                <span>{{ t.hero.card.progressLabel }}</span>
                 <span class="font-bold text-pd">62%</span>
               </div>
 
@@ -183,12 +150,11 @@ const heroStats = [
               <div
                 class="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-2"
               >
-                Aula planejada
+                {{ t.hero.card.lessonEyebrow }}
               </div>
 
               <div class="text-slate-700 font-medium">
-                Revise o que será trabalhado na próxima aula, os materiais
-                vinculados e as atividades previstas para a turma.
+                {{ t.hero.card.lessonDescription }}
               </div>
             </div>
 
@@ -256,13 +222,13 @@ const heroStats = [
               <span
                 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
               >
-                Plano da turma
+                {{ t.hero.card.planEyebrow }}
               </span>
 
               <span
                 class="bg-pm/10 text-pm text-[10px] font-bold px-2 py-0.5 rounded-full"
               >
-                Em revisão
+                {{ t.hero.card.planStatus }}
               </span>
             </div>
 
@@ -277,12 +243,11 @@ const heroStats = [
 
               <div>
                 <h4 class="text-xs font-extrabold text-pd">
-                  Plano B1 — 2026/1
+                  {{ t.hero.card.planTitle }}
                 </h4>
 
                 <p class="text-[10px] text-slate-500 leading-snug">
-                  Livro, unidades, revisões e avaliações conectados ao
-                  cronograma.
+                  {{ t.hero.card.planDescription }}
                 </p>
               </div>
             </div>
@@ -296,13 +261,13 @@ const heroStats = [
               <span
                 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
               >
-                Material didático
+                {{ t.hero.card.materialEyebrow }}
               </span>
 
               <span
                 class="bg-om/10 text-om text-[10px] font-bold px-2 py-0.5 rounded-full"
               >
-                Vinculado
+                {{ t.hero.card.materialStatus }}
               </span>
             </div>
 
@@ -317,12 +282,11 @@ const heroStats = [
 
               <div>
                 <h4 class="text-xs font-extrabold text-pd">
-                  Unidade 3 — Capítulo 2
+                  {{ t.hero.card.materialTitle }}
                 </h4>
 
                 <p class="text-[10px] text-slate-500 leading-snug">
-                  Livro, apostila ou conteúdo próprio conectado ao plano da
-                  aula.
+                  {{ t.hero.card.materialDescription }}
                 </p>
               </div>
             </div>
