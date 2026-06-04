@@ -156,7 +156,6 @@ useHead({
     <SolucaoSection />
     <TransparencySection />
     <StepsSection />
-    <PlanosSection />
     <WaitlistSection />
     <DorEspecificaSection />
     <AppFooter />
