@@ -16,19 +16,33 @@ function onlyDigits(value: string) {
   return value.replace(/\D/g, "");
 }
 
-function maskPhone(value: string) {
-  const digits = onlyDigits(value).slice(0, locale.value === "pt" ? 11 : 10);
+function sanitizeInternationalPhone(value: string) {
+  return value
+    .replace(/[^\d+]/g, "")
+    .replace(/(?!^)\+/g, "")
+    .slice(0, 16);
+}
 
-  if (locale.value === "pt") {
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+function maskPhone(value: string) {
+  if (locale.value !== "pt") {
+    return sanitizeInternationalPhone(value);
   }
 
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `+1 (${digits.slice(0, 3)}) ${digits.slice(3)}`;
-  return `+1 (${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  const digits = onlyDigits(value).slice(0, 11);
+
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
+function normalizePhoneForSubmit(value: string) {
+  if (locale.value === "pt") {
+    return onlyDigits(value);
+  }
+
+  return sanitizeInternationalPhone(value);
 }
 
 function handlePhoneInput(event: Event) {
@@ -37,9 +51,16 @@ function handlePhoneInput(event: Event) {
 }
 
 function isValidPhone(value: string) {
-  const digits = onlyDigits(value);
+  const normalizedPhone = normalizePhoneForSubmit(value);
+  const digits = onlyDigits(normalizedPhone);
+
   if (!digits) return true;
-  return locale.value === "pt" ? digits.length === 10 || digits.length === 11 : digits.length === 10 || digits.length === 11;
+
+  if (locale.value === "pt") {
+    return digits.length === 10 || digits.length === 11;
+  }
+
+  return digits.length >= 8 && digits.length <= 15;
 }
 
 async function handleSubmit() {
@@ -61,7 +82,7 @@ async function handleSubmit() {
     await submitLead({
       tipo: "waitlist",
       email: email.value.trim(),
-      telefone: telefone.value ? onlyDigits(telefone.value) : undefined,
+      telefone: normalizePhoneForSubmit(telefone.value),
       nome: nome.value.trim(),
       hp: hp.value,
     });
@@ -102,7 +123,7 @@ async function handleSubmit() {
 
         <input v-model="email" type="email" :placeholder="t.waitlist.emailPlaceholder" required autocomplete="email" class="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/50 outline-none focus:border-white/60 transition-all text-sm font-medium" />
 
-        <input v-model="telefone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="18" :placeholder="t.waitlist.phonePlaceholder" class="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/50 outline-none focus:border-white/60 transition-all text-sm font-medium" @input="handlePhoneInput" />
+        <input v-model="telefone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" :placeholder="t.waitlist.phonePlaceholder" class="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/50 outline-none focus:border-white/60 transition-all text-sm font-medium" @input="handlePhoneInput" />
 
         <p v-if="errorMessage" class="text-red-200 text-sm font-medium text-left">
           {{ errorMessage }}
