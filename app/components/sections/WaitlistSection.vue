@@ -1,66 +1,41 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { submitLead } from "~/services/leadService";
+import {
+  getDefaultDialCode,
+  getPhoneOption,
+  isValidPhoneNumber,
+  maskPhoneNumber,
+  normalizePhoneForSubmit,
+  phoneDialCodeOptions,
+  type PhoneDialCode,
+} from "~/utils/phoneDialCodes";
 
 const { locale, t } = useLandingI18n();
 
 const email = ref("");
 const telefone = ref("");
+const dialCode = ref<PhoneDialCode>(getDefaultDialCode(locale.value));
 const nome = ref("");
 const hp = ref("");
 const loading = ref(false);
 const success = ref(false);
 const errorMessage = ref("");
 
-function onlyDigits(value: string) {
-  return value.replace(/\D/g, "");
-}
+const phonePlaceholder = computed(() => getPhoneOption(dialCode.value).placeholder);
 
-function sanitizeInternationalPhone(value: string) {
-  return value
-    .replace(/[^\d+]/g, "")
-    .replace(/(?!^)\+/g, "")
-    .slice(0, 16);
-}
-
-function maskPhone(value: string) {
-  if (locale.value !== "pt") {
-    return sanitizeInternationalPhone(value);
-  }
-
-  const digits = onlyDigits(value).slice(0, 11);
-
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-}
-
-function normalizePhoneForSubmit(value: string) {
-  if (locale.value === "pt") {
-    return onlyDigits(value);
-  }
-
-  return sanitizeInternationalPhone(value);
-}
+watch(locale, (newLocale) => {
+  dialCode.value = getDefaultDialCode(newLocale);
+  telefone.value = "";
+});
 
 function handlePhoneInput(event: Event) {
   const input = event.target as HTMLInputElement;
-  telefone.value = maskPhone(input.value);
+  telefone.value = maskPhoneNumber(input.value, dialCode.value);
 }
 
-function isValidPhone(value: string) {
-  const normalizedPhone = normalizePhoneForSubmit(value);
-  const digits = onlyDigits(normalizedPhone);
-
-  if (!digits) return true;
-
-  if (locale.value === "pt") {
-    return digits.length === 10 || digits.length === 11;
-  }
-
-  return digits.length >= 8 && digits.length <= 15;
+function handleDialCodeChange() {
+  telefone.value = maskPhoneNumber(telefone.value, dialCode.value);
 }
 
 async function handleSubmit() {
@@ -71,7 +46,7 @@ async function handleSubmit() {
     return;
   }
 
-  if (!isValidPhone(telefone.value)) {
+  if (!isValidPhoneNumber(telefone.value, dialCode.value)) {
     errorMessage.value = t.value.waitlist.phoneError;
     return;
   }
@@ -82,7 +57,7 @@ async function handleSubmit() {
     await submitLead({
       tipo: "waitlist",
       email: email.value.trim(),
-      telefone: normalizePhoneForSubmit(telefone.value),
+      telefone: normalizePhoneForSubmit(telefone.value, dialCode.value),
       nome: nome.value.trim(),
       hp: hp.value,
     });
@@ -123,7 +98,15 @@ async function handleSubmit() {
 
         <input v-model="email" type="email" :placeholder="t.waitlist.emailPlaceholder" required autocomplete="email" class="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/50 outline-none focus:border-white/60 transition-all text-sm font-medium" />
 
-        <input v-model="telefone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" :placeholder="t.waitlist.phonePlaceholder" class="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/50 outline-none focus:border-white/60 transition-all text-sm font-medium" @input="handlePhoneInput" />
+        <div class="flex gap-2">
+          <select v-model="dialCode" class="w-40 px-3 py-4 rounded-xl bg-white/10 border border-white/30 text-white outline-none focus:border-white/60 transition-all text-sm font-medium" @change="handleDialCodeChange">
+            <option v-for="option in phoneDialCodeOptions" :key="option.code" :value="option.code" class="text-slate-800">
+              {{ option.label }}
+            </option>
+          </select>
+
+          <input v-model="telefone" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="18" :placeholder="phonePlaceholder" class="min-w-0 flex-1 px-5 py-4 rounded-xl bg-white/10 border border-white/30 text-white placeholder-white/50 outline-none focus:border-white/60 transition-all text-sm font-medium" @input="handlePhoneInput" />
+        </div>
 
         <p v-if="errorMessage" class="text-red-200 text-sm font-medium text-left">
           {{ errorMessage }}
