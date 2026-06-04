@@ -1,18 +1,21 @@
 <script setup lang="ts">
+const { t, locale, supportedLocales, localizedPath } = useLandingI18n();
+
 const scrolled = ref(false);
 const mobileOpen = ref(false);
 
-const navLinks = [
-  { href: "#problemas", label: "Problema" },
-  { href: "#solucao", label: "Solução" },
-  { href: "#transparencia", label: "Recursos" },
-];
+const navLinks = computed(() => [
+  { href: "#problemas", label: t.value.nav.problem },
+  { href: "#solucao", label: t.value.nav.solution },
+  { href: "#transparencia", label: t.value.nav.resources },
+]);
 
 function handleScroll() {
   scrolled.value = window.scrollY > 20;
 }
 
 onMounted(() => window.addEventListener("scroll", handleScroll));
+onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
 </script>
 <template>
   <header
@@ -24,10 +27,10 @@ onMounted(() => window.addEventListener("scroll", handleScroll));
     "
   >
     <nav
-      class="w-[100%] mx-auto px-2 h-25 flex items-center justify-between"
+      class="w-[100%] mx-auto px-2 h-25 flex items-center justify-between gap-4"
     >
       <!-- Logo -->
-      <NuxtLink to="/" class="flex items-center gap-2 flex-shrink-0">
+      <NuxtLink :to="localizedPath(locale)" class="flex items-center gap-2 flex-shrink-0">
         <div class="w-10 md:w-[10%] flex items-center justify-center">
           <img
             src="/image/b8edu-logos-sem-fundo.png"
@@ -36,14 +39,6 @@ onMounted(() => window.addEventListener("scroll", handleScroll));
             title="b8edu"
           />
         </div>
-        <!-- <div class="leading-tight">
-          <span class="font-black text-pd text-sm block leading-none"
-            >ByteE</span
-          >
-          <span class="font-black text-om text-sm block leading-none"
-            >School</span
-          >
-        </div> -->
       </NuxtLink>
 
       <!-- Desktop Links -->
@@ -60,25 +55,31 @@ onMounted(() => window.addEventListener("scroll", handleScroll));
 
       <!-- Desktop CTA -->
       <div class="hidden md:flex items-center gap-3">
-        <!-- <a
-          href="#planos"
-          class="text-sm font-semibold text-slate-600 hover:text-pd transition-colors px-4 py-2"
-        >
-          Entrar
-        </a> -->
+        <div class="flex items-center gap-1" :aria-label="t.nav.language">
+          <NuxtLink
+            v-for="item in supportedLocales"
+            :key="item.code"
+            :to="localizedPath(item.code)"
+            class="text-[11px] font-black px-2 py-1 rounded-lg transition-all"
+            :class="item.code === locale ? 'bg-pm text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-pd'"
+          >
+            {{ item.shortName }}
+          </NuxtLink>
+        </div>
+
         <a
           href="#lista-espera"
           class="inline-flex items-center gap-2 bg-om text-white font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-orange-600 transition-all active:scale-95 shadow-sm"
         >
           <span class="material-symbols-outlined text-base">rocket_launch</span>
-          Lista de espera
+          {{ t.nav.waitlist }}
         </a>
       </div>
 
       <!-- Mobile Hamburger -->
       <button
         class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
-        :aria-label="mobileOpen ? 'Fechar menu' : 'Abrir menu'"
+        :aria-label="mobileOpen ? t.nav.closeMenu : t.nav.openMenu"
         @click="mobileOpen = !mobileOpen"
       >
         <span class="material-symbols-outlined">
@@ -102,13 +103,27 @@ onMounted(() => window.addEventListener("scroll", handleScroll));
         >
           {{ link.label }}
         </a>
+
+        <div class="flex items-center gap-2 py-2">
+          <NuxtLink
+            v-for="item in supportedLocales"
+            :key="item.code"
+            :to="localizedPath(item.code)"
+            class="text-xs font-black px-3 py-2 rounded-lg transition-all"
+            :class="item.code === locale ? 'bg-pm text-white' : 'text-slate-500 bg-slate-100'"
+            @click="mobileOpen = false"
+          >
+            {{ item.shortName }}
+          </NuxtLink>
+        </div>
+
         <a
           href="#lista-espera"
           class="inline-flex items-center justify-center gap-2 bg-om text-white font-bold text-sm px-5 py-3 rounded-xl mt-2"
           @click="mobileOpen = false"
         >
           <span class="material-symbols-outlined text-base">rocket_launch</span>
-          Entrar na lista de espera
+          {{ t.nav.joinWaitlist }}
         </a>
       </div>
     </Transition>
