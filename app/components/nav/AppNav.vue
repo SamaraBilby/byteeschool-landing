@@ -27,26 +27,28 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
     "
   >
     <nav
-      class="w-[100%] mx-auto px-2 h-25 flex items-center justify-between gap-4"
+      class="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:h-24 lg:px-8"
     >
       <!-- Logo -->
-      <NuxtLink :to="localizedPath(locale)" class="flex items-center gap-2 flex-shrink-0">
-        <div class="w-10 md:w-[10%] flex items-center justify-center">
-          <img
-            src="/image/b8edu-logos-sem-fundo.png"
-            alt="Logo b8edu"
-            class="w-100"
-            title="b8edu"
-          />
-        </div>
+      <NuxtLink
+        :to="localizedPath(locale)"
+        class="flex min-w-0 flex-shrink-0 items-center"
+        aria-label="b8edu"
+      >
+        <img
+          src="/image/b8edu-logos-sem-fundo.png"
+          alt="Logo b8edu"
+          class="h-14 w-auto object-contain sm:h-16 lg:h-20"
+          title="b8edu"
+        />
       </NuxtLink>
 
       <!-- Desktop Links -->
-      <ul class="hidden md:flex items-center gap-8">
+      <ul class="hidden xl:flex items-center gap-6 2xl:gap-8">
         <li v-for="link in navLinks" :key="link.href">
           <a
             :href="link.href"
-            class="text-sm font-semibold text-slate-600 hover:text-pd transition-colors"
+            class="whitespace-nowrap text-sm font-semibold text-slate-600 hover:text-pd transition-colors"
           >
             {{ link.label }}
           </a>
@@ -54,7 +56,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
       </ul>
 
       <!-- Desktop CTA -->
-      <div class="hidden md:flex items-center gap-3">
+      <div class="hidden xl:flex items-center gap-3">
         <div class="flex items-center gap-1" :aria-label="t.nav.language">
           <NuxtLink
             v-for="item in supportedLocales"
@@ -69,16 +71,16 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
 
         <a
           href="#lista-espera"
-          class="inline-flex items-center gap-2 bg-om text-white font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-orange-600 transition-all active:scale-95 shadow-sm"
+          class="inline-flex items-center gap-2 whitespace-nowrap bg-om text-white font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-orange-600 transition-all active:scale-95 shadow-sm"
         >
           <span class="material-symbols-outlined text-base">rocket_launch</span>
           {{ t.nav.waitlist }}
         </a>
       </div>
 
-      <!-- Mobile Hamburger -->
+      <!-- Mobile / smaller notebook menu button -->
       <button
-        class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+        class="xl:hidden inline-flex h-11 w-11 items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
         :aria-label="mobileOpen ? t.nav.closeMenu : t.nav.openMenu"
         @click="mobileOpen = !mobileOpen"
       >
@@ -88,11 +90,11 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
       </button>
     </nav>
     <div class="h-[5px] w-full rainbow-bar" />
-    <!-- Mobile Menu -->
+    <!-- Mobile / smaller notebook menu -->
     <Transition name="slide-down">
       <div
         v-if="mobileOpen"
-        class="md:hidden bg-white border-t border-slate-100 px-6 py-6 flex flex-col gap-4"
+        class="xl:hidden bg-white border-t border-slate-100 px-6 py-6 flex flex-col gap-4 shadow-sm"
       >
         <a
           v-for="link in navLinks"
@@ -104,7 +106,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
           {{ link.label }}
         </a>
 
-        <div class="flex items-center gap-2 py-2">
+        <div class="flex flex-wrap items-center gap-2 py-2">
           <NuxtLink
             v-for="item in supportedLocales"
             :key="item.code"
